@@ -1,0 +1,313 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema kutube_db
+# harus ubah semua nama db nya persis ke nama schema njir
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema kutube_db
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `kutube_db` ;
+USE `kutube_db` ;
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`user` (
+  `id_user` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `full_name` VARCHAR(50) NOT NULL,
+  `tanggal_lahir` DATE NOT NULL,
+  `photo_url` TINYTEXT NULL,
+  `kota` VARCHAR(45) NOT NULL,
+  `pendidikan` CHAR(3) NOT NULL,
+  `user_type` ENUM('Penonton', 'Creator') NULL,
+  `no_ktp` VARCHAR(16) NULL,
+  `foto_ktp_url` VARCHAR(45) NULL,
+  `is_verified` TINYINT(1) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`id_user`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`video`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`video` (
+  `id_video` INT NOT NULL AUTO_INCREMENT,
+  `id_uploader` INT NOT NULL,
+  `uploaded_by` VARCHAR(45) NOT NULL,
+  `judul_video` TINYTEXT NOT NULL,
+  `description` LONGTEXT NULL,
+  `duration` INT NOT NULL,
+  `video_type` ENUM('Panjang', 'Pendek') NOT NULL,
+  `like` INT NOT NULL DEFAULT 0,
+  `dislike` INT NOT NULL DEFAULT 0,
+  `views` INT NOT NULL DEFAULT 0,
+  `views_total_time` INT NOT NULL DEFAULT 0,
+  `upload_time` TIMESTAMP NOT NULL,
+  `status` ENUM('Aktif', 'Diblokir') NOT NULL DEFAULT 'Aktif',
+  PRIMARY KEY (`id_video`),
+  INDEX `fk_video_user_idx` (`id_uploader` ASC) VISIBLE,
+  CONSTRAINT `fk_video_user`
+    FOREIGN KEY (`id_uploader`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`kategori`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`kategori` (
+  `id_kategori` INT NOT NULL AUTO_INCREMENT,
+  `nama_kategori` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id_kategori`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`video_has_kategori`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`video_has_kategori` (
+  `video_id_video` INT NOT NULL,
+  `kategori_id_kategori` INT NOT NULL,
+  PRIMARY KEY (`video_id_video`, `kategori_id_kategori`),
+  INDEX `fk_video_has_kategori_kategori1_idx` (`kategori_id_kategori` ASC) VISIBLE,
+  INDEX `fk_video_has_kategori_video1_idx` (`video_id_video` ASC) VISIBLE,
+  CONSTRAINT `fk_video_has_kategori_video1`
+    FOREIGN KEY (`video_id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_video_has_kategori_kategori1`
+    FOREIGN KEY (`kategori_id_kategori`)
+    REFERENCES `kutube_db`.`kategori` (`id_kategori`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`comments`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`comments` (
+  `id_comments` INT NOT NULL AUTO_INCREMENT,
+  `id_user` INT NOT NULL,
+  `id_video` INT NOT NULL,
+  `isi_comment` LONGTEXT NOT NULL,
+  PRIMARY KEY (`id_comments`),
+  INDEX `fk_comments_user1_idx` (`id_user` ASC) VISIBLE,
+  INDEX `fk_comments_video1_idx` (`id_video` ASC) VISIBLE,
+  CONSTRAINT `fk_comments_user1`
+    FOREIGN KEY (`id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_comments_video1`
+    FOREIGN KEY (`id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`watch_history`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`watch_history` (
+  `id_user` INT NOT NULL,
+  `id_video` INT NOT NULL,
+  `click_time` TIMESTAMP NOT NULL,
+  `on_duration` INT NOT NULL,
+  PRIMARY KEY (`id_user`, `id_video`),
+  INDEX `fk_watch_history_video1_idx` (`id_video` ASC) VISIBLE,
+  CONSTRAINT `fk_watch_history_user1`
+    FOREIGN KEY (`id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_watch_history_video1`
+    FOREIGN KEY (`id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`playlist`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`playlist` (
+  `id_playlist` INT NOT NULL,
+  `judul_playlist` TINYTEXT NOT NULL DEFAULT 'New Playlist',
+  `description` LONGTEXT NULL,
+  PRIMARY KEY (`id_playlist`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`user_has_playlist`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`user_has_playlist` (
+  `user_id_user` INT NOT NULL,
+  `playlist_id_playlist` INT NOT NULL,
+  PRIMARY KEY (`user_id_user`, `playlist_id_playlist`),
+  INDEX `fk_user_has_playlist_playlist1_idx` (`playlist_id_playlist` ASC) VISIBLE,
+  INDEX `fk_user_has_playlist_user1_idx` (`user_id_user` ASC) VISIBLE,
+  CONSTRAINT `fk_user_has_playlist_user1`
+    FOREIGN KEY (`user_id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_has_playlist_playlist1`
+    FOREIGN KEY (`playlist_id_playlist`)
+    REFERENCES `kutube_db`.`playlist` (`id_playlist`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`video_has_playlist`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`video_has_playlist` (
+  `video_id_video` INT NOT NULL,
+  `playlist_id_playlist` INT NOT NULL,
+  PRIMARY KEY (`video_id_video`, `playlist_id_playlist`),
+  INDEX `fk_video_has_playlist_playlist1_idx` (`playlist_id_playlist` ASC) VISIBLE,
+  INDEX `fk_video_has_playlist_video1_idx` (`video_id_video` ASC) VISIBLE,
+  CONSTRAINT `fk_video_has_playlist_video1`
+    FOREIGN KEY (`video_id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_video_has_playlist_playlist1`
+    FOREIGN KEY (`playlist_id_playlist`)
+    REFERENCES `kutube_db`.`playlist` (`id_playlist`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`hastag`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`hastag` (
+  `id_hastag` INT NOT NULL,
+  `hastag_name` VARCHAR(20) NULL,
+  PRIMARY KEY (`id_hastag`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`kategori_has_hastag`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`kategori_has_hastag` (
+  `kategori_id_kategori` INT NOT NULL,
+  `hastag_id_hastag` INT NOT NULL,
+  PRIMARY KEY (`kategori_id_kategori`, `hastag_id_hastag`),
+  INDEX `fk_kategori_has_hastag_hastag1_idx` (`hastag_id_hastag` ASC) VISIBLE,
+  INDEX `fk_kategori_has_hastag_kategori1_idx` (`kategori_id_kategori` ASC) VISIBLE,
+  CONSTRAINT `fk_kategori_has_hastag_kategori1`
+    FOREIGN KEY (`kategori_id_kategori`)
+    REFERENCES `kutube_db`.`kategori` (`id_kategori`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_kategori_has_hastag_hastag1`
+    FOREIGN KEY (`hastag_id_hastag`)
+    REFERENCES `kutube_db`.`hastag` (`id_hastag`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`blocked_user`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`blocked_user` (
+  `id_user` INT NOT NULL,
+  `time_left` DATETIME NOT NULL,
+  PRIMARY KEY (`id_user`),
+  CONSTRAINT `fk_blocked_user_user1`
+    FOREIGN KEY (`id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`blocked_video`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`blocked_video` (
+  `id_video` INT NOT NULL,
+  `start_suspend` TIME NOT NULL,
+  `end_suspend` TIME NOT NULL,
+  PRIMARY KEY (`id_video`),
+  CONSTRAINT `fk_blocked_video_video1`
+    FOREIGN KEY (`id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`login_session`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`login_session` (
+  `user_id_user` INT NOT NULL,
+  `login_timestamp` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`user_id_user`),
+  CONSTRAINT `fk_login_session_user1`
+    FOREIGN KEY (`user_id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`adsense`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`adsense` (
+  `id_video` INT NOT NULL,
+  `jumlah_iklan` INT NOT NULL,
+  PRIMARY KEY (`id_video`),
+  CONSTRAINT `fk_adsense_video1`
+    FOREIGN KEY (`id_video`)
+    REFERENCES `kutube_db`.`video` (`id_video`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `kutube_db`.`statistic_chanel`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `kutube_db`.`statistic_chanel` (
+  `id_user` INT NOT NULL,
+  `jumlah_subs` INT NOT NULL,
+  `watch_time` INT NULL,
+  PRIMARY KEY (`id_user`),
+  CONSTRAINT `fk_statistic_chanel_user1`
+    FOREIGN KEY (`id_user`)
+    REFERENCES `kutube_db`.`user` (`id_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
