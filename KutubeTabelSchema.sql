@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `kutube_db`.`video` (
   `dislikes` INT NOT NULL DEFAULT 0,
   `views` INT NOT NULL DEFAULT 0,
   `views_total_time` INT NOT NULL DEFAULT 0,
-  `upload_time` TIMESTAMP NOT NULL,
+  `upload_time` TIMESTAMP NOT NULL DEFAULT current_timestamp,
   `status` ENUM('Aktif', 'Diblokir') NOT NULL DEFAULT 'Aktif',
   `highlight` TIME NULL,
   PRIMARY KEY (`id_video`),

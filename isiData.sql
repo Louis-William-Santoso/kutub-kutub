@@ -72,7 +72,20 @@ INSERT INTO `video` (`id_video`, `id_uploader`, `judul_video`, `description`, `d
 (7, 4, 'Sunset di Kuta (Short)', 'Indahnya sunset di Kuta', 45, 'Pendek', 1200, 5, 20000, 900000, '2023-05-05 18:30:00', 'Aktif', NULL),
 (8, 8, 'Tips Memotong Bawang', 'Cara cepat motong bawang tanpa nangis', 60, 'Pendek', 800, 15, 18000, 1080000, '2023-05-10 09:00:00', 'Aktif', NULL),
 (9, 5, 'Belajar Kunci Gitar C', 'Tutorial gitar untuk pemula', 300, 'Panjang', 4000, 25, 80000, 24000000, '2023-05-12 15:00:00', 'Aktif', NULL),
-(10, 6, 'Unboxing Headset Murah', 'Unboxing headset 100ribuan', 420, 'Panjang', 900, 40, 22000, 9240000, '2023-05-20 13:00:00', 'Aktif', NULL);
+(10, 6, 'Unboxing Headset Murah', 'Unboxing headset 100ribuan', 420, 'Panjang', 900, 40, 22000, 9240000, '2023-05-20 13:00:00', 'Aktif', NULL),
+(11, 1, 'Tutorial Belajar SQL Dasar Cepat', 'Video ini membahas dasar-dasar Structured Query Language untuk pemula.', 600, 'Panjang', 1200, 20, 15000, 4500000, '2024-01-15 10:00:00', 'Aktif', '00:02:30'),
+(12, 3, 'Review Smartphone Terbaru 2024', 'Ulasan mendalam tentang ponsel andalan tahun ini.', 450, 'Panjang', 850, 15, 12000, 2700000, '2024-03-22 15:30:00', 'Aktif', '00:01:05'),
+(13, 7, 'Vlog Liburan ke Bali Edisi Pantai', 'Keseruanku saat berlibur di pantai-pantai indah Bali.', 120, 'Pendek', 500, 5, 8000, 600000, '2024-05-10 18:00:00', 'Aktif', NULL),
+(14, 5, 'Resep Masakan Sehat untuk Diet', 'Cara membuat makanan yang lezat dan rendah kalori.', 720, 'Panjang', 1500, 30, 20000, 8000000, '2024-07-01 11:45:00', 'Aktif', '00:03:40'),
+(15, 10, 'Lagu Akustik Terbaru: Senja', 'Penampilan akustik lagu baru yang menenangkan jiwa.', 240, 'Pendek', 2100, 10, 35000, 5600000, '2024-09-05 20:15:00', 'Aktif', NULL),
+(16, 2, 'Tips dan Trik Editing Video Cepat', 'Mempercepat alur kerja editing Anda dengan trik rahasia.', 550, 'Panjang', 900, 25, 10000, 3500000, '2024-11-11 09:30:00', 'Aktif', '00:01:50'),
+(17, 9, 'Menjelajahi Keindahan Alam Indonesia', 'Dokumenter singkat tentang hutan dan gunung di Jawa.', 180, 'Pendek', 450, 2, 7500, 450000, '2025-01-20 14:00:00', 'Aktif', NULL),
+(18, 4, 'Prediksi Teknologi Masa Depan 2030', 'Apa yang akan kita lihat di dunia teknologi beberapa tahun ke depan?', 650, 'Panjang', 1100, 40, 18000, 7000000, '2025-03-14 17:00:00', 'Aktif', '00:05:00'),
+(19, 6, 'Kompilasi Momen Lucu Hewan Peliharaan', 'Kumpulan tingkah laku menggemaskan dari anjing dan kucing.', 90, 'Pendek', 700, 8, 11000, 400000, '2025-06-08 19:40:00', 'Aktif', NULL),
+(20,1,'lah',NULL,3600,'Panjang',1000,0,10000000,321321321,'2025-09-01 10:00:00','Aktif',NULL),
+(21,2,'loh',NULL,2000,'Panjang',0,0,0,0,'2025-09-01 11:10:00','Aktif',NULL),
+(22,5,'leh',NULL,3000,'Panjang',0,0,0,0,'2025-09-02 00:00:00','Aktif',NULL),
+(23, 8, 'Belajar Pemrograman Python untuk Data Science', 'Pengenalan Python dan aplikasinya di bidang data.', 800, 'Panjang', 1800, 50, 25000, 15000000, '2025-10-25 12:12:00', 'Aktif', '00:08:15');
 
 -- -----------------------------------------------------
 -- Table `kutube_db`.`post_image`
@@ -145,7 +158,15 @@ INSERT INTO `comments_video` (`id_comments`, `id_user`, `id_video`, `isi_comment
 (7, 3, 7, 'Sunsetnya cantik parah!'),
 (8, 9, 8, 'Akhirnya ada tips motong bawang, makasih!'),
 (9, 1, 9, 'Penjelasannya mudah dimengerti, thanks!'),
-(10, 7, 10, 'Lumayan juga ya headsetnya buat harga segitu.');
+(10, 7, 1,'Lumayan juga ya headsetnya buat harga segitu.'),
+(11, 1, 4, 'Penjelasan yang sangat jelas! Terima kasih.'),
+(12, 1, 5, 'Materi yang bagus, sangat membantu.'),
+(13, 2, 7, 'Desainnya keren, tapi harganya terlalu mahal.'),
+(14, 4, 8, 'Sudah coba resep ini, enak banget!'),
+(15, 5, 9, 'Lagu yang menenangkan, sukses terus!'),
+(16, 4, 9,'Contoh kasus untuk data science-nya sangat relevan.'),
+(17, 7, 1, 'Pemandangannya luar biasa!'),
+(18, 9, 2,'Hahaha, tingkah kucingnya bikin ngakak.');
 
 -- -----------------------------------------------------
 -- Table `kutube_db`.`watch_history`
@@ -161,7 +182,12 @@ INSERT INTO `watch_history` (`id_user`, `id_video`, `click_time`, `on_duration`)
 (3, 7, '2023-05-04 15:00:00', 45),
 (9, 8, '2023-05-11 09:30:00', 60),
 (1, 9, '2023-05-13 16:00:00', 300),
-(7, 10, '2023-05-21 10:00:00', 420);
+(7, 10, '2023-05-21 10:00:00', 420),
+(6, 1, '2025-01-20 12:30:00', 580), 
+(6, 4, '2025-02-10 18:00:00', 720), 
+(8, 2, '2025-04-05 10:15:00', 300), 
+(8, 5, '2025-06-01 21:00:00', 240), 
+(10, 10, '2025-10-28 13:45:00', 700); 
 
 -- -----------------------------------------------------
 -- Table `kutube_db`.`report_video`
@@ -189,7 +215,20 @@ INSERT INTO `adsense` (`id_video`, `jumlah_iklan`, `ads_aktif`) VALUES
 (3, 2, 1),
 (4, 2, 1),
 (5, 3, 1),
-(9, 2, 0);
+(9, 2, 0),
+(11, 1, 1),
+(12, 3, 1),
+(13, 2, 1),
+(14, 2, 1),
+(15, 3, 1),
+(16, 1, 1),
+(17, 2, 1),
+(18, 2, 1),
+(19, 2, 1),
+(20, 2, 1),
+(21, 4, 1),
+(22, 1, 1),
+(23, 3, 1);
 
 -- -----------------------------------------------------
 -- Table `kutube_db`.`blocked_video`
@@ -224,7 +263,12 @@ INSERT INTO `video_has_hastag_kategori` (`kategori_id_kategori`, `hastag_id_hast
 (3, 3, 7),
 (5, 5, 8),
 (4, 1, 9),
-(6, 4, 10);
+(6, 4, 10),
+(1, 1, 1), 
+(1, 3, 4), 
+(1, 5, 3), 
+(1, 7, 2), 
+(6, 4, 5); 
 
 -- -----------------------------------------------------
 -- Table `kutube_db`.`report_posting`
