@@ -44,16 +44,11 @@ WHERE is_verified = 1 AND user_type = 'Creator';
 
 
 -- f. Tampilkan jumlah video iklan yang diperoleh oleh pengguna terverifikasi selama September–Oktober 2025
-SELECT U.id_user AS `ID User`, 
-       U.username AS Username, 
-       SUM(A.jumlah_iklan) AS `Jumlah Video Iklan` 
-FROM user U 
-LEFT JOIN video V ON U.id_user = V.id_uploader 
-LEFT JOIN adsense A ON A.id_video = V.id_video 
-WHERE U.is_verified = 1 
-  AND (YEAR(V.upload_time) = 2025 AND MONTH(V.upload_time) BETWEEN 9 AND 10) 
-GROUP BY `ID User`;
-
+SELECT U.id_user as `ID User`, U.username as Username, SUM(A.jumlah_iklan) as `Jumlah Iklan`
+FROM kutube_db.video V
+LEFT JOIN adsense A ON A.id_video = V.id_video
+JOIN kutube_db.user U ON U.id_user = V.id_uploader
+WHERE YEAR(V.upload_time) = 2025 AND (MONTH(V.upload_time) = 8 OR MONTH(V.upload_time) = 9) AND U.is_verified = 1 GROUP BY `ID User`, U.Username;
 
 -- g. Tampilkan 5 kategori video yang paling sering diblokir
 SELECT VHH.kategori_id_kategori AS Category, 
