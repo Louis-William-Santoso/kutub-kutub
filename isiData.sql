@@ -128,7 +128,7 @@ INSERT INTO `blocked_user` (`id_user`, `time_left`) VALUES
 -- -----------------------------------------------------
 -- Table `kutube_db`.`donation`
 -- -----------------------------------------------------
-INSERT INTO `donation` (`id_donation`, `id_sender`, `id_reciver`, `jumlah_donasi`) VALUES
+INSERT INTO `donation` (`id_donation`, `id_sender`, `id_receiver`, `jumlah_donasi`) VALUES
 (1, 1, 2, 50000),
 (2, 3, 5, 20000),
 (3, 10, 8, 100000),
